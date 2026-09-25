@@ -1,0 +1,9 @@
+# Build artifacts
+/bin/
+willionaire
+
+# Execution logs (本地 .log 檔案，不進版控)
+/logs/
+
+# OS / Editor
+.DS_Store
