@@ -71,6 +71,29 @@ func TestParseWithRetry_InvalidJSON_RetriesThenSucceeds(t *testing.T) {
 	}
 }
 
+func TestParseWithRetry_ToolCallWithArguments(t *testing.T) {
+	caller := &mockCaller{
+		responses: []string{
+			`{"thought":"需要查股價","status":"RUNNING","toolCalls":[{"name":"get_daily_kline","arguments":{"stock_id":"2330"}}]}`,
+		},
+	}
+
+	out, err := ParseWithRetry(context.Background(), caller, "prompt", 1)
+	if err != nil {
+		t.Fatalf("預期成功，卻回傳錯誤: %v", err)
+	}
+	if len(out.ToolCalls) != 1 {
+		t.Fatalf("預期 1 個 ToolCall，實際為 %d 個", len(out.ToolCalls))
+	}
+	got := out.ToolCalls[0]
+	if got.Name != "get_daily_kline" {
+		t.Errorf("預期 Name 為 %q，實際為 %q", "get_daily_kline", got.Name)
+	}
+	if got.Arguments["stock_id"] != "2330" {
+		t.Errorf("預期 Arguments[stock_id] 為 %q，實際為 %q", "2330", got.Arguments["stock_id"])
+	}
+}
+
 func TestParseWithRetry_InvalidStatus_RetriesThenSucceeds(t *testing.T) {
 	caller := &mockCaller{
 		responses: []string{

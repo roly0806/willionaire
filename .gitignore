@@ -7,3 +7,6 @@ willionaire
 
 # OS / Editor
 .DS_Store
+
+# 筆記文件
+/docs/

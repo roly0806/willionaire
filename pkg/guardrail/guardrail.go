@@ -45,10 +45,13 @@ func (s Status) IsValid() bool {
 
 // ToolCall 代表 Agent 這一輪要執行的一次工具呼叫。
 //
-// 目前只定義 Name，Arguments 之類欄位等實際工具（例如 FinMind）
-// 的呼叫需求明確後再補上，避免過度設計。
+// Day3：補上 Arguments 欄位（string -> string 的簡易 map），
+// 對應 pkg/tools 的 FinMind Tool（例如 get_daily_kline 需要 stock_id 參數）。
+// 用 map[string]string 而非為每個工具量身定制的 struct，是刻意的簡化：
+// 目前只有單一工具，先不做強型別的參數 schema，避免過度設計。
 type ToolCall struct {
-	Name string `json:"name"`
+	Name      string            `json:"name"`
+	Arguments map[string]string `json:"arguments,omitempty"`
 }
 
 // Output 是模型每一輪回應必須符合的結構化 Schema。
